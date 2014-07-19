@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+	<head>
+		<title>TrackBackの手動送信</title>
+		<link rel="stylesheet" type="text/css" href="<?php echo $CONF['AdminURL']?>styles/bookmarklet.css" />
+	</head>
+	
+	<body>
+		<h1>TrackBackの手動送信</h1>
+<?php if ($success): ?>
+		<p>
+			<strong>トラックバックの送信が完了しました</strong>
+		</p>
+<?php endif; ?>
+<?php if ($error): ?>
+		<p>
+			<strong><?php echo $status; ?></strong>
+		</p>
+<?php endif; ?>
+<?php if ($form): ?>		
+		<form method="post" action="<?php echo $CONF['ActionURL'] ?>">
+		
+		<div>
+			<input type="hidden" name="tb_id" value="<?php echo $itemid;?>" />
+			<input type="hidden" name="action" value="plugin" />
+			<input type="hidden" name="name" value="TrackBack" />
+			<input type="hidden" name="type" value="ping" />
+			
+			<table>
+				<tr>
+					<td>あなたの記事のurl</td>
+					<td><input type="text" value="" name="url" size="60" /></td>
+				</tr>
+				<tr>
+					<td>記事のタイトル</td>
+					<td><input type="text" value="" name="title" size="60" /></td>
+				</tr>
+				<tr>
+					<td>記事の要約文</td>
+					<td><textarea name="excerpt" cols="40" rows="5"></textarea></td>
+				</tr>
+				<tr>
+					<td>あなたのblogの名前</td>
+					<td><input type="text" value="" name="blog_name" size="60" /></td>
+				</tr>
+				<tr>
+					<td>トラックバック送信</td>
+					<td><input type="submit" value="トラックバックを送信する" /></td>
+				</tr>
+			</table>
+		</div>
+		
+		</form>
+<?php endif; ?>
+	</body>
+</html>

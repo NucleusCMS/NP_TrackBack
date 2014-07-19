@@ -1,0 +1,107 @@
+<?php global $manager; ?>
+<h2>
+	All trackbacks for &quot;<?php echo $story['title'];?>&quot;
+	<?php if ($count > $amount): ?>
+		(Page <?php echo ceil($start / $amount) + 1;?> of <?php echo ceil($count / $amount);?>)
+	<?php endif; ?>
+</h2>
+
+<?php if(count($items)): ?>
+<?php if ($count > $amount): ?>
+<table class="navigation">
+	<tr>
+		<td style='padding: 0;'>
+			<?php if ($start > 0): ?>
+			<form method="post" action="<?php echo $CONF['PluginURL'];?>trackback/index.php">
+				<div>
+					<input type="submit" value="&lt;&lt; Previous" />	
+					<input type="hidden" name="action" value="list" />
+					<input type="hidden" name="id" value="<?php echo $story['id'];?>" />
+					<input type="hidden" name="start" value="<?php echo max(0,$start - $amount);?>" />
+					<?php $manager->addTicketHidden(); ?>
+				</div>
+			</form>
+			<?php endif; ?>
+		</td>
+		<td style='padding: 0; text-align: right;'>	
+			<?php if ($start + $amount < $count): ?>
+			<form method="post" action="<?php echo $CONF['PluginURL'];?>trackback/index.php">
+				<div>
+					<input type="submit" value="Next &gt; &gt;" />
+					<input type="hidden" name="action" value="list" />
+					<input type="hidden" name="id" value="<?php echo $story['id'];?>" />
+					<input type="hidden" name="start" value="<?php echo ($start + $amount);?>" />
+					<?php $manager->addTicketHidden(); ?>
+				</div>
+			</form>
+			<?php endif; ?>
+		</td>
+	</tr>
+</table>
+<?php endif; ?>
+
+<table>
+	<thead>
+		<tr>
+			<th>Date</th>
+			<th>Title, Blog and Excerpt</th>
+			<th colspan="2">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php while (list(,$item) = each ($items)): ?>
+		<tr onmouseover='focusRow(this);' onmouseout='blurRow(this);'>
+			<td>
+				<?php echo str_replace(' ', '&nbsp;', date("Y-m-d @ H:i",$item['timestamp']));?>
+			</td>
+			<td>
+				<a href="<?php echo $item['url'];?>"><img alt="Visit" border="0" src="<?php echo $plugindirurl?>silk/house_go.png" /></a>
+				<strong><?php echo $item['title'];?></strong> 
+				<em>(<?php echo $item['blog_name'];?>)</em><br />
+				<?php echo $item['excerpt'];?>
+			</td>
+			<td>
+				<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=block&tb='.$item['id'].'&next=list&id='.$story['id'].'&start='.$start),ENT_QUOTES);?>"><img alt="Block" border="0" src="<?php echo $plugindirurl?>silk/delete.png" /></a>
+			</td>
+			<td>
+				<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=delete&tb='.$item['id'].'&next=list&id='.$story['id'].'&start='.$start),ENT_QUOTES);?>"><img alt="Delete" border="0" src="<?php echo $plugindirurl?>silk/cross.png" /></a>
+			</td>
+		</tr>
+		<?php endwhile; ?>
+	</tbody>
+</table>
+
+<?php if ($count > $amount): ?>
+<table class="navigation">
+	<tr>
+		<td style='padding: 0;'>
+			<?php if ($start > 0): ?>
+			<form method="post" action="<?php echo $CONF['PluginURL'];?>trackback/index.php">
+				<div>
+					<input type="submit" value="&lt;&lt; Previous" />	
+					<input type="hidden" name="action" value="list" />
+					<input type="hidden" name="id" value="<?php echo $story['id'];?>" />
+					<input type="hidden" name="start" value="<?php echo max(0,$start - $amount);?>" />
+					<?php $manager->addTicketHidden(); ?>
+				</div>
+			</form>
+			<?php endif; ?>
+		</td>
+		<td style='padding: 0; text-align: right;'>	
+			<?php if ($start + $amount < $count): ?>
+			<form method="post" action="<?php echo $CONF['PluginURL'];?>trackback/index.php">
+				<div>
+					<input type="submit" value="Next &gt; &gt;" />
+					<input type="hidden" name="action" value="list" />
+					<input type="hidden" name="id" value="<?php echo $story['id'];?>" />
+					<input type="hidden" name="start" value="<?php echo ($start + $amount);?>" />
+					<?php $manager->addTicketHidden(); ?>
+				</div>
+			</form>
+			<?php endif; ?>
+		</td>
+	</tr>
+</table>
+<?php endif; ?>
+<?php endif; ?>
+

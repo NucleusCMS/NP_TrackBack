@@ -1,0 +1,128 @@
+<?php global $manager; ?>
+<h2>
+	All trackbacks
+</h2>
+
+<div id="message" style="color: red;"></div>
+
+<div style="width: 95%">
+<span id="tb_grid_bookmark"></span>
+
+<table id="tb_grid" style="border:0; margin:0;">
+	<colgroup>
+		<col style="width:25px;" />
+		<col style="width:40px;" />
+		<col style="width:70px;" />
+		<col style="width:150px;" />
+		<col style="width:200px;"/>
+		<col style="width:25px;" />
+	</colgroup>
+	<thead>
+		<tr>
+			<th>&#160;</th>
+			<th>id</th>
+			<th>Date</th>
+			<th>Story</th>
+			<th>Title, Blog and Excerpt</th>
+			<th>&#160;</th>
+		</tr>
+	</thead>
+</table>
+With selected: 
+<a href="#" onclick="javascript: doDelete()"><img alt="Delete" border="0" src="<?php echo $plugindirurl?>silk/cross.png" /></a>
+<a href="#" onclick="javascript: doBlock()"><img alt="Block" border="0" src="<?php echo $plugindirurl?>silk/delete.png" /></a>
+</div>
+
+<!--
+<textarea id='tb_grid_debugmsgs' rows='5' cols='80' style='font-size:smaller;'></textarea>
+-->
+
+<script type="text/javascript">
+//<![CDATA[
+	Rico.loadModule('LiveGridAjax');
+	Rico.loadModule('LiveGridMenu');
+	Rico.include('translations/livegrid_ja.js');
+	Rico.include('ricoAjaxEngine.js');
+	
+	Rico.onLoad( function() {
+		var params = [
+			'action=ajax',
+			'type=all',
+			'ticket=<?php echo $ticket ;?>'
+		]; 
+		
+		var cb = new Rico.TableColumn.checkbox('1','0');
+		var colspec = [
+			{canHide:false, type:'control', control:cb, ClassName:'aligncenter'},
+			{type:'raw'},
+			{type:'raw'},
+			,
+			,
+			,
+		];
+		
+		var opts = {
+			saveColumnInfo   : {width:true, filter:false, sort:false}, 
+			menuEvent	: 'none',
+			frozenColumns	: 2,
+			canSortDefault	: true,
+			canHideDefault	: true,
+			allowColResize	: true,
+			canFilterDefault: false,
+			highlightElem	: 'none',
+			columnSpecs	: colspec
+		};
+		
+		buffer = new Rico.Buffer.AjaxSQL('<?php echo $CONF['PluginURL'].'trackback/';?>grid.php',
+				{TimeOut:10, requestParameters:params, sortParmFmt: 'displayName'}
+		);
+		orderGrid=new Rico.LiveGrid ('tb_grid', buffer, opts);
+		orderGrid.menu=new Rico.GridMenu({});
+		
+		// ajaxEngine
+		ajaxEngine = new Rico.AjaxEngine;
+		ajaxEngine.registerRequest('updateData', '<?php echo $CONF['PluginURL'].'trackback/';?>grid.php' );
+		ajaxEngine.registerAjaxElement('message');
+	});
+
+	function checkUpdateIds(){
+		var updateIds = [];
+		Rico.writeDebugMsg('check updated rows');
+		for(var i = 0; i < buffer.size; i++){
+			row = buffer.rows[i];
+			if( row[0].content && row[0].content == '1' ){
+				updateIds.push(row[1].content);
+				Rico.writeDebugMsg('id: '+row[1].content+' updated');
+			}
+		}
+		return updateIds;
+	}
+	
+	function doBlock(){
+		var ids = checkUpdateIds();
+		if( !(ids.length && ids.length > 0) ) return ;
+		var params = [
+			'action=doblock',
+			'ticket=<?php echo $ticket ;?>',
+			'ids='+ids.join(',')
+		]; 
+		ajaxEngine.sendRequest('updateData', {parameters: ajaxEngine._createQueryString(params, 0)});
+		orderGrid.resetContents('tb_grid');
+		buffer.fetch(-1);
+	}
+	
+	function doDelete(){
+		var ids = checkUpdateIds();
+		if( !(ids.length && ids.length > 0) ) return ;
+		
+		var params = [
+			'action=dodelete',
+			'ticket=<?php echo $ticket ;?>',
+			'ids='+ids.join(',')
+		];
+		ajaxEngine.sendRequest('updateData', {parameters: ajaxEngine._createQueryString(params, 0)});
+		orderGrid.resetContents('tb_grid');
+		buffer.fetch(-1);
+	}
+//]]>
+</script>

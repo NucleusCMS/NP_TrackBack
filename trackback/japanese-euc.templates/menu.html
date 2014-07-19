@@ -1,0 +1,32 @@
+<?php global $manager?>
+<h2>Trackback</h2>
+
+<script type="text/javascript" src="<?php echo $CONF['PluginURL']?>trackback/js/prototype.js"></script>
+<script type="text/javascript" src="<?php echo $CONF['PluginURL']?>trackback/js/rico/rico.js"></script>
+
+<ul>
+	<li>
+		<img border="0" src="<?php echo $plugindirurl?>silk/application_view_list.png" />
+		<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=index'),ENT_QUOTES);?>">Overview of all items</a>
+	</li>
+	<li>
+		<img border="0" src="<?php echo $plugindirurl?>silk/tick.png" />
+		<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=all'),ENT_QUOTES);?>">トラックバックの全データ</a>
+	</li>
+	<li>
+		<img border="0" src="<?php echo $plugindirurl?>silk/exclamation.png" />
+		<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=blocked'),ENT_QUOTES);?>">ブロックされたトラックバック</a>
+	</li> 
+	<li>
+		<img border="0" src="<?php echo $plugindirurl?>silk/transmit_go.png" />
+		<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=ping'),ENT_QUOTES);?>">手動ping</a>
+	</li>
+	<li>
+		<img border="0" src="<?php echo $plugindirurl?>silk/help.png" />
+		<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'].'trackback/index.php?action=help'),ENT_QUOTES);?>">ヘルプ</a>
+	</li>
+    <li>
+		<img border="0" src="<?php echo $plugindirurl?>silk/plugin_edit.png" />
+		<a href="<?php echo htmlspecialchars($manager->addTicketToUrl($CONF['AdminURL'].'index.php?action=pluginoptions&plugid='.$plugid),ENT_QUOTES);?>">プラグインオプション設定</a>
+	</li>
+</ul>

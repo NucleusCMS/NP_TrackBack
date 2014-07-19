@@ -1,0 +1,41 @@
+<?php echo '<'.'?xml version="1.0" encoding="UTF-8"?'.'>';?>
+<?php global $manager; ?>
+
+<ajax-response>
+	<response type="object" id='tb_grid_updater'>
+		<rowcount><?php echo $count; ?></rowcount>
+		<rows update_ui='true' >
+			<?php while (list(,$item) = each ($items)): ?>
+			<tr>
+				<td>0</td>
+				<td><?php echo $item['id'];?></td>
+				<td>
+					<?php echo date("Y-m-d H:i:s",$item['timestamp']);?>
+				</td>
+				<td>
+					<![CDATA[
+					<a href="<?php echo $item['story_url']; ?>"><?php echo $item['story'];?></a>
+					]]>
+				</td>
+				<td>
+					<![CDATA[
+					<a href="<?php echo $item['url'];?>">
+						<img alt="Visit" border="0" src="<?php echo $plugindirurl?>silk/house_go.png" />
+					</a>
+					<strong><?php echo $item['title'];?></strong>
+					<?php echo $item['spam'] ? 
+						'<img alt="spam" border="0" src="' . $plugindirurl . 'silk/delete.png" />' : 
+						'';?>
+					<?php echo $item['link'] ? 
+						'' : 
+						'<img alt="NOT Linked" border="0" src="' . $plugindirurl . 'silk/link_break.png" />';?>
+					<?php echo $item['excerpt'];?>
+					<em>(<?php echo $item['blog_name'];?>)</em>
+					]]>
+				</td>
+				<td></td>
+			</tr>
+			<?php endwhile; ?>
+		</rows>	
+	</response>
+</ajax-response>

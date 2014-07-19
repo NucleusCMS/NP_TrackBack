@@ -1,0 +1,50 @@
+<?php global $manager; ?>
+<h2>手動pingフォーム</h2>
+
+<form method="post" action="<?php echo $CONF['PluginURL'];?>trackback/index.php">
+
+    <input type="hidden" name="action" value="sendping" />
+    <input type="hidden" name="next" value="ping" />
+    <?php $manager->addTicketHidden(); ?>
+	
+    <table>
+        <tr>
+            <th colspan='2'>手動ping</th>
+        </tr>
+        <tr>
+            <td>あなたのurl</td>
+            <td>
+                <input type="text" name="url" size="60" value="<?php echo htmlspecialchars($item['url']);?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>記事のタイトル</td>
+            <td>
+                <input type="text" name="title" size="60" value="<?php echo htmlspecialchars($item['title']);?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>記事の要約文</td>
+            <td>
+                    <textarea name="excerpt" cols="40" rows="5"><?php echo $item['excerpt'];?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>Blog名</td>
+            <td>
+                <input type="text" name="blog_name" size="60" value="<?php echo htmlspecialchars($item['blogname']);?>" />
+            </td>
+        </tr>
+        <tr>
+            <td>ping先url</td>
+            <td>
+                <input type="text" value="" name="ping_url" size="60" />
+            </td>
+        </tr>
+        <tr>
+            <td>送信</td>
+            <td><input type="submit" value="送信" /></td>
+        </tr>
+    </table>
+
+</form>

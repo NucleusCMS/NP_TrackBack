@@ -1,0 +1,116 @@
+<h2>ヘルプ</h2>
+
+
+<h3>スキンへの記述例</h3>
+<p>
+Nucleus CMS Japan Wikiの<a href="http://japan.nucleuscms.org/wiki/plugins:trackback">NP_TrackBackのページ</a>を参照してください。
+</p>
+
+<h3>表示のカスタマイズ</h3>
+<p>
+	トラックバック関連の表示方法はテンプレートを編集することによってカスタマイズできますが、色や余白などのデザインはCSS側で指定する必要があります。テンプレート内に入力したクラス名のプロパティはcssで指定してください。デフォルトのテンプレートを飾るCSSプロパティの例をあげておきます。
+</p>
+
+<pre>div.tb {
+	border: 1px solid #000; background: #FFF;
+}
+div.tb div.head {
+	padding: 4px;
+	background: #000; color: #FFF;
+	font-weight: bold; text-transform: lowercase; letter-spacing: 0.6em;
+}
+div.tb div.empty {
+	padding: 4px;
+	font-size: 95%;
+}
+div.tb div.item {
+	padding: 4px;
+}
+div.tb div.item div.name {
+	margin-bottom: 8px;
+	font-size: 120%; font-weight: bold;
+}
+div.tb div.item div.body {
+	font-size: 95%;
+}
+div.tb div.item div.body a {
+	font-weight: bold;
+}
+div.tb div.item div.date {
+	margin-bottom: 8px;
+	color: #888;
+	font-size: 85%; text-align: right;
+}
+div.tb div.info {
+	padding: 4px;
+	color: #FFF; background: #888;
+	font-size: 85%; font-style: italic;
+}</pre>
+
+<h3>日本語版更新履歴</h3>
+
+<ul>
+	<li>Version 2.0.3jp13 : (2008/12/14)</li>
+	<li>　[Fixed] Pingフォームへのリンクを開こうとするとInvalid or expired ticket.になる問題を修正</li>
+	<li>　[Fixed] TrackBack送信時のエラーハンドリングを改良した</li>
+	<li>　[Fixed] TrackBackの文字コードの検出が正しく行われない場合がある問題を修正</li>
+	
+	<li>Version 2.0.3jp12 : (2008/01/12)</li>
+	<li>　[Fixed] エラーメッセージの文字コードが適切でなかった問題を修正</li>
+	<li>　[Fixed] トラックバックの送信文字コードをUTF-8固定にした</li>
+	<li>　[Fixed] トラックバック可/不可の判定がおかしかった問題を修正</li>
+	
+	<li>Version 2.0.3jp11 : (2007/09/30)</li>
+	<li>　[Added] SuperAdmin以外でもTrackBackが管理できるようにした</li>
+	
+	<li>Version 2.0.3jp10 : (2007/06/30)</li>
+	<li>　[Fixed] mysql_query()をsql_query()に変更</li>
+	<li>　[Changed] 実体参照テーブルについてNucleus標準ものを使うようにした</li>
+	<li>　[Changed] インストールできるバージョンを3.3以降した</li>
+	<li>　[Changed] Ricoを2.0にアップデートしたのに伴い、管理画面の機能を増強</li>
+	<li>　[Added] コメント部分でもテンプレート変数が使えるようにした</li>
+	<li>　[Fixed] トラックバック送信部分の不具合を修正(FC2対策)</li>
+	<li>　[Changed] UserAgentをオリジナル版にあわせて変更</li>
+	<li>　[Changed] TrackBackのレスポンスの解析にXMLパーサーを使うようにした</li>
+	<li>　[Fixed] 言及リンクチェックの不具合を修正</li>
+	<li>　[Added] 保留にしているURLと同じURLのトラックバックを無視するようにした</li>
+	<!-- 10.1, 10.2, 10.3 -->
+	<li>　[Fixed] 言及リンクチェックの用のURL生成ルーチンの不具合を修正</li>
+	<!-- 10.4 -->
+	<li>　[Added] spamトラックバック一括消去時に確認が出るようにした</li>
+	
+	<li>Version 2.0.3jp9 : (2007/05/04)</li>
+	<li>　[Added] doIf()を追加(Nucleus 3.3向け)</li>
+	<li>　[Added] URLが無効なトラックバックを無視するようにした</li>
+	
+	<li>Version 2.0.3jp8 : (2007/03/18)</li>
+	<li>　[Fixed] 管理画面でStoryのリンクの不具合を修正</li>
+	<li>　[Changed] URL抽出ルーチンを改良</li>
+	<li>　[Changed] 管理画面へのリンクを修正</li>
+	<li>　[Changed] 管理画面のページングをAjax対応にした</li>
+	<li>　[Changed] トラックバック通知アドレスをブログごとに設定できるようにした</li>
+	<li>　[Fixed] phpのshort openタグを修正</li>
+	<li>　[Fixed] 管理画面のトラックバック一覧で日付が正常に表示されない問題を修正</li>
+	
+	<li>Version 2.0.3jp7 : (2006/11/26)</li>
+	<li>　[Changed] SpamChekについて微調整</li>
+	<li>　[Added] Ticket処理を追加(CSRF対策)</li>
+	<li>　[Fixed] URLに&amp;が入っているときの動作を変更</li>
+	<li>　[Added] 管理画面にアイコンを追加</li>
+	
+	<li>Version 2.0.3jp6 : (2006/09/30)</li>
+	<li>　[Fixed] セキュリティの向上</li>
+	
+	<li>Version 2.0.3jp5 : (2006/09/16)</li>
+	<li>　[Fixed] getPermaLinksFromText()内のURL抽出ルーチンの不具合を修正</li>
+	<li>　[Fixed] Auto-Discovery時にSQLエラーが出る不具合を修正</li>
+	<li>　[Fixed] 管理画面でパースエラーが出る場合がある不具合を修正</li>
+	<li>　[Changed] SQLのクォートを"から'に変更</li>
+	<li>　[Fixed] mb_emulator環境にてエラーが出る問題を修正</li>
+	<li>　[Fixed] curlが有効な環境でエラーが出る問題を修正</li>
+	
+	<li>Version 2.0.3jp4 : (2006/07/15)</li>
+	<li>　[Added] AutoDiscoveryURL出力時にSpamCheckを行うようにした</li>
+	<li>　[Added] メッセージ、デフォルト値を日本語化</li>
+	<li>　[Added] 大手ASPの言及トラックバックチェックの際にURLのリダイレクトを解除するようにした</li>
+</ul>

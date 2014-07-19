@@ -1,0 +1,9 @@
+<?php global $manager; ?>
+<blockquote style="color: red;border:1px solid red;padding:1em;"><b>Table update:</b><br />
+			<form method="post"><div>
+				<input type="hidden" name="action" value="tableUpgrade" />
+				<input type="submit" tabindex="10" value="upgrade table" />
+				<?php $manager->addTicketHidden(); ?>
+			</div></form>
+</blockquote>
+	

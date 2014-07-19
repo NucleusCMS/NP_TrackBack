@@ -1,0 +1,8 @@
+<?echo '<'.'?xml version="1.0" encoding="UTF-8"?'.'>';?>
+<?php global $manager; ?>
+
+<ajax-response>
+   <response type="element" id="message">
+   		<?php echo $message; ?>
+   </response>
+</ajax-response>
