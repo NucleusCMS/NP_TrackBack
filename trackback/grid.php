@@ -51,7 +51,7 @@
 		// where clause
 		$res = sql_query('SELECT tblog FROM '.sql_table('team').' WHERE tadmin = 1 AND tmember = '.$member->getID() );
 		$adminBlog = array();
-		while ($row = mysql_fetch_array($res)){
+		while ($row = sql_fetch_array($res)){
 			$adminBlog[] = $row[0];
 		}
 		if($adminBlog)
@@ -81,7 +81,7 @@
 			$query = 'SELECT t.id  FROM ' . sql_table('plugin_tb') . ' t, ' . sql_table('item') . ' i WHERE t.tb_id = i.inumber AND t.id in ( '. implode(',', $safeids) . ' ) '. $whereClause ;
 			$res = sql_query($query);
 			$safeids = array();
-			while ($row = mysql_fetch_array($res)){
+			while ($row = sql_fetch_array($res)){
 				$safeids[] = $row[0];
 			}
 		}
@@ -118,7 +118,7 @@
 			WHERE
 			t.tb_id = i.inumber AND
 			".$filter[$type].$whereClause);
-			$rrow = mysql_fetch_array($rres);
+			$rrow = sql_fetch_array($rres);
 			$count = $rrow['count'];
 			
 			$rres = sql_query ("
@@ -146,7 +146,7 @@
 			
 			$items = array();
 			
-			while ($rrow = mysql_fetch_array($rres))
+			while ($rrow = sql_fetch_array($rres))
 			{
 				$rrow['title'] 		= $oPluginAdmin->plugin->_cut_string($rrow['title'], 50);
 				$rrow['title'] 		= $oPluginAdmin->plugin->_strip_controlchar($rrow['title']);

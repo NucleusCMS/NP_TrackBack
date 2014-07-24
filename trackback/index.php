@@ -59,7 +59,7 @@
 		// where clause
 		$res = sql_query('SELECT tblog FROM '.sql_table('team').' WHERE tadmin = 1 AND tmember = '.$member->getID() );
 		$adminBlog = array();
-		while ($row = mysql_fetch_array($res)){
+		while ($row = sql_fetch_array($res)){
 			$adminBlog[] = $row[0];
 		}
 		if($adminBlog)
@@ -96,7 +96,7 @@
 			$tb = intRequestVar('tb');
 			$query = 'SELECT i.inumber FROM ' . sql_table('plugin_tb') . ' t, ' . sql_table('item') . ' i WHERE t.tb_id = i.inumber AND t.id = '. $tb . $whereClause ;
 			$res = sql_query($query);
-			if( ! @mysql_num_rows($res) ){
+			if( ! @sql_num_rows($res) ){
 				echo '<p>' . _ERROR_DISALLOWED . '</p>';
 				echo '<p>Reason: ' . __LINE__ . '</p>';
 				$oPluginAdmin->end();
@@ -132,7 +132,7 @@
 				 ADD `id` INT( 11 ) NOT NULL AUTO_INCREMENT PRIMARY KEY FIRST ;";
 			$res = @sql_query($q);
 			if (!$res){
-				echo 'Could not alter table: ' . mysql_error();
+				echo 'Could not alter table: ' . sql_error();
 			}else{
 				$tableVersion = 1;
 				$oTemplate->template('templates/updatetablefinished.html');
@@ -266,7 +266,7 @@
 					t.tb_id = i.inumber AND
 					t.block = " . (( $action == 'all') ? 0 : 1) . $whereClause );				
 						
-			if ($row = mysql_fetch_array($rres))
+			if ($row = sql_fetch_array($rres))
 				$count = $row['count'];
 			else
 				$count = 0;
@@ -306,7 +306,7 @@
 				
 				$items = array();
 				
-				while ($rrow = mysql_fetch_array($rres)){
+				while ($rrow = sql_fetch_array($rres)){
 					$rrow['title'] 		= $oPluginAdmin->plugin->_cut_string($rrow['title'], 50);
 					$rrow['title'] 		= $oPluginAdmin->plugin->_strip_controlchar($rrow['title']);
 					$rrow['title'] 		= htmlspecialchars($rrow['title']);
@@ -355,7 +355,7 @@
 					i.inumber = '".$id."'
 			". $whereClause );
 			
-			if ($irow = mysql_fetch_array($ires))
+			if ($irow = sql_fetch_array($ires))
 			{
 				$story['id']    = $id;
 				$story['title'] = $irow['ititle'];
@@ -370,7 +370,7 @@
 						t.block = 0
 				");				
 							
-				if ($row = mysql_fetch_array($rres))
+				if ($row = sql_fetch_array($rres))
 					$count = $row['count'];
 				else
 					$count = 0;
@@ -396,7 +396,7 @@
 				
 				$items = array();
 	
-				while ($rrow = mysql_fetch_array($rres))
+				while ($rrow = sql_fetch_array($rres))
 				{
 					$rrow['title'] 		= $oPluginAdmin->plugin->_cut_string($rrow['title'], 50);
 					$rrow['title'] 		= $oPluginAdmin->plugin->_strip_controlchar($rrow['title']);
@@ -443,7 +443,7 @@
 			
 			$blogs = array();
 			
-			while ($brow = mysql_fetch_array($bres))
+			while ($brow = sql_fetch_array($bres))
 			{
 				if( !$member->isTeamMember($brow['bnumber']) ) continue;
 				$ires = sql_query ("
@@ -466,7 +466,7 @@
 
 				$items = array();
 
-				while ($irow = mysql_fetch_array($ires))
+				while ($irow = sql_fetch_array($ires))
 				{
 					$items[] = $irow;
 				}

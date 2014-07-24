@@ -435,7 +435,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 			if($offset)
 				$query .= ' LIMIT '.intval($offset).', ' .intval($amount);
 			$res = sql_query($query);
-			while ($row = mysql_fetch_array($res))
+			while ($row = sql_fetch_array($res))
 			{
 
 				$row['blog_name'] 	= htmlspecialchars($row['blog_name'], ENT_QUOTES);
@@ -470,7 +470,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 
 				$out[] = TEMPLATE::fill($this->getOption('tplItem'), $iVars);
 			}
-			mysql_free_result($res);
+			sql_free_result($res);
 			
 			return @join("\n",$out);
 		}
@@ -554,7 +554,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 			echo TEMPLATE::fill($this->getOption('tplHeader'), $gVars);
 
 
-			while ($amount != 0 && $row = mysql_fetch_array($res))
+			while ($amount != 0 && $row = sql_fetch_array($res))
 			{
 
 				$row['blog_name'] 	= htmlspecialchars($row['blog_name'], ENT_QUOTES);
@@ -627,7 +627,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 					timestamp DESC
 			';
 			$result = sql_query($q);
-			$total = mysql_result($result,0,0);
+			$total = sql_result($result,0,0);
 
 			if($amount != -1 && $total > $amount){
 				$leftcount = $total - $amount;
@@ -645,11 +645,11 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 			}
 //modify end+++++++++
 
-			if (mysql_num_rows($res) == 0) 
+			if (sql_num_rows($res) == 0) 
 			{
 				echo TEMPLATE::fill($this->getOption('tplEmpty'), $gVars);
 			}
-			mysql_free_result($res);
+			sql_free_result($res);
 			
 			echo TEMPLATE::fill($this->getOption('tplFooter'), $gVars);
 
@@ -846,7 +846,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 	
 				$query = 'SELECT url, blog_name, excerpt, title, UNIX_TIMESTAMP(timestamp) as timestamp FROM '.sql_table('plugin_tb').' WHERE tb_id='.intval($tb_id).' AND block = 0 ORDER BY timestamp DESC';
 				$res = sql_query($query);
-				while ($o = mysql_fetch_object($res)) 
+				while ($o = sql_fetch_object($res)) 
 				{
 					// No need to do conversion, because it is already UTF-8
 					$data = array (
@@ -1090,11 +1090,11 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 				FROM 
 					'.sql_table('plugin_tb').' 
 				WHERE 
-					url   = \''.mysql_real_escape_string($url).'\' AND 
+					url   = \''.sql_real_escape_string($url).'\' AND 
 					tb_id = \''.intval($tb_id).'\'
 			');
 			
-			if (mysql_num_rows($res) != 0) 
+			if (sql_num_rows($res) != 0) 
 			{
 				// Existing TB, update it
 /*
@@ -1102,42 +1102,42 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 					UPDATE
 						'.sql_table('plugin_tb').'
 					SET 
-						title     = "'.mysql_real_escape_string($title).'", 
-						excerpt   = "'.mysql_real_escape_string($excerpt).'", 
-						blog_name = "'.mysql_real_escape_string($blog_name).'", 
+						title     = "'.sql_real_escape_string($title).'", 
+						excerpt   = "'.sql_real_escape_string($excerpt).'", 
+						blog_name = "'.sql_real_escape_string($blog_name).'", 
 						timestamp = '.mysqldate(time()).'
 					WHERE 
-						url       = "'.mysql_real_escape_string($url).'" AND 
+						url       = "'.sql_real_escape_string($url).'" AND 
 						tb_id     = "'.$tb_id.'"
 				');
 */
 //modify start+++++++++
-				$rows = mysql_fetch_assoc($res);
+				$rows = sql_fetch_assoc($res);
 				$spam = ( $rows['block'] || $rows['spam'] ) ? true : false;
 				$res = @sql_query('
 					UPDATE
 						'.sql_table('plugin_tb').'
 					SET 
-						title     = \''.mysql_real_escape_string($title).'\', 
-						excerpt   = \''.mysql_real_escape_string($excerpt).'\', 
-						blog_name = \''.mysql_real_escape_string($blog_name).'\', 
+						title     = \''.sql_real_escape_string($title).'\', 
+						excerpt   = \''.sql_real_escape_string($excerpt).'\', 
+						blog_name = \''.sql_real_escape_string($blog_name).'\', 
 						timestamp = '.mysqldate($b->getCorrectTime()).'
 					WHERE 
-						url       = \''.mysql_real_escape_string($url).'\' AND 
-						tb_id     = \''.mysql_real_escape_string(intval($tb_id)).'\'
+						url       = \''.sql_real_escape_string($url).'\' AND 
+						tb_id     = \''.sql_real_escape_string(intval($tb_id)).'\'
 				');
 //modify end+++++++++
 
 				if (!$res) {
-					return 'Could not update trackback data: '.mysql_error();
+					return 'Could not update trackback data: '.sql_error();
 				}
 			} 
 			else 
 			{
 //mod by cles
 				// spam block
-				$res = @sql_query('SELECT id FROM '.sql_table('plugin_tb').' WHERE block = 1 and url = \''.mysql_real_escape_string($url).'\'' );
-				if (mysql_num_rows($res) != 0) {
+				$res = @sql_query('SELECT id FROM '.sql_table('plugin_tb').' WHERE block = 1 and url = \''.sql_real_escape_string($url).'\'' );
+				if (sql_num_rows($res) != 0) {
 					// NP_Trackback has blocked tb !
 					ACTIONLOG :: add(INFO, "Trackback: Duplicated Blocked Trackback [ignore] (itemid:$tb_id from: $url)");
 					return 'Sorry, trackback ping is not accepted.';
@@ -1230,10 +1230,10 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 						block     = "'.($block ? '1' : '0').'",
 						spam      = "'.($spam ? '1' : '0').'",
 						link      = "'.($link ? '1' : '0').'",
-						url       = "'.mysql_real_escape_string($url).'",
-						title     = "'.mysql_real_escape_string($title).'",
-						excerpt   = "'.mysql_real_escape_string($excerpt).'",
-						blog_name = "'.mysql_real_escape_string($blog_name).'",
+						url       = "'.sql_real_escape_string($url).'",
+						title     = "'.sql_real_escape_string($title).'",
+						excerpt   = "'.sql_real_escape_string($excerpt).'",
+						blog_name = "'.sql_real_escape_string($blog_name).'",
 						timestamp = '.mysqldate(time()).'
 				';
 */
@@ -1242,14 +1242,14 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 					INSERT INTO 
 						'.sql_table('plugin_tb').' 
 					SET
-						tb_id     = \''.mysql_real_escape_string(intval($tb_id)).'\',
+						tb_id     = \''.sql_real_escape_string(intval($tb_id)).'\',
 						block     = \''.($block ? '1' : '0').'\',
 						spam      = \''.($spam ? '1' : '0').'\',
 						link      = \''.($link ? '1' : '0').'\',
-						url       = \''.mysql_real_escape_string($url).'\',
-						title     = \''.mysql_real_escape_string($title).'\',
-						excerpt   = \''.mysql_real_escape_string($excerpt).'\',
-						blog_name = \''.mysql_real_escape_string($blog_name).'\',
+						url       = \''.sql_real_escape_string($url).'\',
+						title     = \''.sql_real_escape_string($title).'\',
+						excerpt   = \''.sql_real_escape_string($excerpt).'\',
+						blog_name = \''.sql_real_escape_string($blog_name).'\',
 						timestamp = '.mysqldate($b->getCorrectTime()).'
 				';
 //modify end+++++++++
@@ -1257,7 +1257,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 				$res = @sql_query($query);
 
 				if (!$res) {
-					return 'Could not save trackback data, possibly because of a double entry: ' . mysql_error() . $query;
+					return 'Could not save trackback data, possibly because of a double entry: ' . sql_error() . $query;
 				}
 			}
 	
@@ -1353,7 +1353,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 			
 			$url = $CONF['SiteURL'];
 			
-			if ($o = mysql_fetch_object($res)) {
+			if ($o = sql_fetch_object($res)) {
 				$url = htmlspecialchars($o->url, ENT_QUOTES);
 			}
 			
@@ -1473,7 +1473,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 			timestamp ASC
 			');
 			
-			while ($row = mysql_fetch_array($res)) {
+			while ($row = sql_fetch_array($res)) {
 				
 				$trackback = array(
 				'title' => $row['title'],
@@ -1736,9 +1736,9 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 		{
 			
 			// Check to see if the cache contains this link
-			$res = sql_query('SELECT url, title FROM '.sql_table('plugin_tb_lookup').' WHERE link=\''.mysql_real_escape_string($link).'\'');
+			$res = sql_query('SELECT url, title FROM '.sql_table('plugin_tb_lookup').' WHERE link=\''.sql_real_escape_string($link).'\'');
 
-			if ($row = mysql_fetch_array($res)) 
+			if ($row = sql_fetch_array($res)) 
 			{
 				if ($row['title'] != '')
 				{
@@ -1783,10 +1783,10 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 							$convertedTitle = $title;
 /*
 						// Store in cache
-						$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".mysql_real_escape_string($link)."','".mysql_real_escape_string($uri)."','".mysql_real_escape_string($title)."')");
+						$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".sql_real_escape_string($link)."','".sql_real_escape_string($uri)."','".sql_real_escape_string($title)."')");
 */
 						// Store in cache
-						$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".mysql_real_escape_string($link)."','".mysql_real_escape_string($uri)."','".mysql_real_escape_string($convertedTitle)."')");
+						$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".sql_real_escape_string($link)."','".sql_real_escape_string($uri)."','".sql_real_escape_string($convertedTitle)."')");
 //modify end+++++++++
 						$title = $this->_decode_entities($title);
 
@@ -1799,7 +1799,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 						$uri = html_entity_decode($uri, ENT_COMPAT);
 	
 						// Store in cache
-						$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".mysql_real_escape_string($link)."','".mysql_real_escape_string($uri)."','')");
+						$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".sql_real_escape_string($link)."','".sql_real_escape_string($uri)."','')");
 	
 						return array (
 							$uri, $uri
@@ -1809,7 +1809,7 @@ define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJI
 			}
 			
 			// Store in cache
-			$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".mysql_real_escape_string($link)."','','')");
+			$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".sql_real_escape_string($link)."','','')");
 	
 			return array ('', '');
 		}
@@ -2334,7 +2334,7 @@ function _strip_controlchar($string){
 	function checkTableVersion(){
 				$res = sql_query("SHOW FIELDS from ".sql_table('plugin_tb') );
 				$fieldnames = array();
-				while ($co = mysql_fetch_assoc($res)) {
+				while ($co = sql_fetch_assoc($res)) {
 					if($co['Field'] == 'block') return true;
 				}
 				return false;
@@ -2366,7 +2366,7 @@ function _strip_controlchar($string){
 		$query = 'INSERT INTO ' . sql_table('plugin_tb_lc') . " (tb_id, from_id) VALUES ('".intval($tb_id)."','".intval($itemid)."')";
 		$res = @sql_query($query);
 		if (!$res) 
-			return 'Could not save trackback data, possibly because of a double entry: ' . mysql_error();
+			return 'Could not save trackback data, possibly because of a double entry: ' . sql_error();
 	}
 	
 	/**
@@ -2384,7 +2384,7 @@ function _strip_controlchar($string){
 		);
 
 		// when no TrackBack pings are found
-		if (!$res || mysql_num_rows($res) == 0) {
+		if (!$res || sql_num_rows($res) == 0) {
 			echo TEMPLATE::fill($this->getOption('tplLocalEmpty'), $vars);
 			return;
 		}
@@ -2392,7 +2392,7 @@ function _strip_controlchar($string){
 		// when TrackBack pings are found
 		echo TEMPLATE::fill($this->getOption('tplLocalHeader'), $vars);
 		
-		while ($o = mysql_fetch_object($res)) {
+		while ($o = sql_fetch_object($res)) {
 			$canDelete = $this->canDelete($tb_id);
 			$data = array(
 				'url' => createItemLink($o->from_id),
