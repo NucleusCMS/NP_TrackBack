@@ -32,7 +32,7 @@ class NP_TrackBack extends NucleusPlugin {
 	function getAuthor() 	  { return 'rakaz + nakahara21 + hsur'; }
 	function getURL()    	  { return 'http://blog.cles.jp/np_cles/category/31/subcatid/3'; }
 	function getVersion()	  { return '3.0'; }
-	function getDescription() { return '[$Revision: 1.311 $]<br />' . _TB_DESCRIPTION; }
+	function getDescription() { return _TB_DESCRIPTION; }
 	function hasAdminArea()   { return 1; }
 
 	function _createItemLink($itemid, $b){
@@ -85,9 +85,6 @@ class NP_TrackBack extends NucleusPlugin {
 
 		$isAcceptPing = $this->isAcceptTrackBack($tb_id);
 
-		//if( $skinType == 'template' && (! $isAcceptPing ) ){
-		//	return;
-		//}
 		switch ($what) {
 		
 			// Insert Auto-discovery RDF code
