@@ -1731,10 +1731,10 @@ class NP_TrackBack extends NucleusPlugin {
 			}
 			return ( $encoding ) ? $encoding : _CHARSET;
 		}
-		if (!ereg("[\x80-\xFF]", $string) && !ereg("\x1B", $string))
+		if (!preg_match("/[\x80-\xFF]/", $string) && !preg_match('/\x1B/', $string))
 		return 'US-ASCII';
 		
-		if (!ereg("[\x80-\xFF]", $string) && ereg("\x1B", $string))
+		if (!preg_match("/[\x80-\xFF]/", $string) && preg_match("/\x1B/", $string))
 		return 'ISO-2022-JP';
 		
 		if (preg_match("/^([\x01-\x7F]|[\xC0-\xDF][\x80-\xBF]|[\xE0-\xEF][\x80-\xBF][\x80-\xBF])+$/", $string) == 1)
@@ -2192,7 +2192,7 @@ class NP_TrackBack extends NucleusPlugin {
 
 	function init() {
 		// include language file for this plugin
-		$language = ereg_replace( '[\\|/]', '', getLanguageName());
+		$language = preg_replace( '@[\\|/]@', '', getLanguageName());
 		if (file_exists($this->getDirectory().'language/'.$language.'.php'))
 			include_once($this->getDirectory().'language/'.$language.'.php');
   else
