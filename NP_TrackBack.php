@@ -31,7 +31,7 @@ class NP_TrackBack extends NucleusPlugin {
 	function getName()   	  { return 'TrackBack';   }
 	function getAuthor() 	  { return 'rakaz + nakahara21 + hsur'; }
 	function getURL()    	  { return 'http://blog.cles.jp/np_cles/category/31/subcatid/3'; }
-	function getVersion()	  { return '2.0.3 jp13'; }
+	function getVersion()	  { return '3.0'; }
 	function getDescription() { return '[$Revision: 1.311 $]<br />' . _TB_DESCRIPTION; }
 	function hasAdminArea()   { return 1; }
 
