@@ -35,7 +35,6 @@ class NP_TrackBack extends NucleusPlugin {
 	function getDescription() { return '[$Revision: 1.311 $]<br />' . _TB_DESCRIPTION; }
 	function hasAdminArea()   { return 1; }
 
-//modify start+++++++++
 	function _createItemLink($itemid, $b){
 		global $CONF, $manager;
 		
@@ -64,7 +63,6 @@ class NP_TrackBack extends NucleusPlugin {
 		
 		return $itemLink;
 	}
-//modify end+++++++++
 
 	/**************************************************************************************
 	 * SKIN VARS, TEMPLATE VARS AND ACTIONS
@@ -77,29 +75,24 @@ class NP_TrackBack extends NucleusPlugin {
 
 		global $itemid, $manager, $CONF;
 
-//modify start+++++++++
 		if(preg_match('/limit/i', $tb_id)){
 			$amount = $tb_id;
 			$tb_id = '';
 		}
 		$amount = intval(str_replace('limit', '', $amount));
-//modify end+++++++++
 
 		if ($tb_id == '') $tb_id = intval($itemid);
 
-//mod by cles
 		$isAcceptPing = $this->isAcceptTrackBack($tb_id);
 
 		//if( $skinType == 'template' && (! $isAcceptPing ) ){
 		//	return;
 		//}
-//mod by cles end
 		switch ($what) {
 		
 			// Insert Auto-discovery RDF code
 			case 'tbcode':
 			case 'code':
-//mod by cles
 //					if($skinType == 'item')
 
 				$spamcheck = array (
@@ -124,20 +117,17 @@ class NP_TrackBack extends NucleusPlugin {
 				}
 
 				if( ($skinType == 'item') && (!$spam) && $isAcceptPing  )
-//mod by cles end
 					$this->insertCode($tb_id);
 				break;
 				
 			// Insert TrackBack URL
 			case 'tburl':
 			case 'url':
-//mod by cles
 //					echo $this->getTrackBackUrl($tb_id);
 				if($isAcceptPing)
 					echo $this->getTrackBackUrl($tb_id);
 				else
 					echo 'Sorry, no trackback pings are accepted.';
-//mod by cles end
 				break;
 			
 			// Insert manual ping URL
@@ -163,12 +153,9 @@ class NP_TrackBack extends NucleusPlugin {
 			// Shows the TrackBack list
 			case 'list':
 			case '':
-//modify start+++++++++
 //					$this->showList($tb_id);
 				$this->showList($tb_id, $amount);
-//modify end+++++++++
 				break;
-//mod by cles
 			// show requred URL
 			case 'required':
 				echo  $this->getRequiredURL($tb_id);
@@ -178,7 +165,6 @@ class NP_TrackBack extends NucleusPlugin {
 			case 'locallist':
 				$this->showLocalList($tb_id);
 				break;					
-//mod by cles end
 				
 			default:
 				return;
@@ -262,7 +248,6 @@ class NP_TrackBack extends NucleusPlugin {
 
 			// Show manual ping form
 			case 'form':
-//mod by cles
 //					$this->showManualPingForm(intRequestVar('tb_id'));
 				$tb_id = intRequestVar('tb_id');
 				$isAcceptPing = $this->isAcceptTrackBack($tb_id);
@@ -271,7 +256,6 @@ class NP_TrackBack extends NucleusPlugin {
 					$this->showManualPingForm($tb_id);
 				else
 					echo 'Sorry, no trackback pings are accepted.';
-//mod by cles end
 				break;
 
 			// Detect trackback
@@ -288,12 +272,10 @@ class NP_TrackBack extends NucleusPlugin {
 				echo "tbDone('" . requestVar('tb_link') . "', '" . $url . "', '" . $title . "');";
 
 				break;
-//mod by cles
 			// redirect 
 			case 'redirect':
 				return $this->redirect(intRequestVar('tb_id'), requestVar('urlHash'));
 				break;
-//mod by cles end
 			case 'left':
 				echo $this->showLeftList(intRequestVar('tb_id'), intRequestVar('amount'));
 				break;
@@ -380,11 +362,9 @@ class NP_TrackBack extends NucleusPlugin {
 			$row['title']  		= htmlspecialchars($row['title'], ENT_QUOTES);
 			$row['excerpt']  	= htmlspecialchars($row['excerpt'], ENT_QUOTES);
 			if (_CHARSET != 'UTF-8') {
-//modify start+++++++++
 				$row['blog_name'] 	= $this->_restore_to_utf8($row['blog_name']);
 				$row['title'] 		= $this->_restore_to_utf8($row['title']);
 				$row['excerpt'] 	= $this->_restore_to_utf8($row['excerpt']);
-//modify end+++++++++
 				$row['blog_name'] 	= $this->_utf8_to_entities($row['blog_name']);
 				$row['title'] 		= $this->_utf8_to_entities($row['title']);
 				$row['excerpt'] 	= $this->_utf8_to_entities($row['excerpt']);
@@ -399,12 +379,10 @@ class NP_TrackBack extends NucleusPlugin {
 				'date'	   	=> htmlspecialchars(strftime($this->getOption('dateFormat'), $row['timestamp']), ENT_QUOTES)
 			);
 
-//mod by cles
 			if( $this->getOption('HideUrl') == 'yes' )
 				$iVars['url'] = $CONF['ActionURL'] . '?action=plugin&amp;name=TrackBack&amp;type=redirect&amp;tb_id=' . $tb_id . '&amp;urlHash=' . $row['urlHash'];
 			else
 				$iVars['url'] = $row['url'];
-//mod by cles end
 
 			$out[] = TEMPLATE::fill($this->getOption('tplItem'), $iVars);
 		}
@@ -419,7 +397,6 @@ class NP_TrackBack extends NucleusPlugin {
 	function showList($tb_id, $amount = 0) {
 		$tb_id = intval($tb_id);
 		global $manager, $blog, $CONF, $member;
-//mod by cles
 		$enableHideurl = true;
 		// for TB LinkLookup
 		if( 
@@ -432,7 +409,6 @@ class NP_TrackBack extends NucleusPlugin {
 			$enableHideurl = false;
 			$amount = '-1';
 		}
-//mod by cles end
 
 /*
 		$res = sql_query('
@@ -502,7 +478,6 @@ class NP_TrackBack extends NucleusPlugin {
 /*
 */
 			if (_CHARSET != 'UTF-8') {
-//modify start+++++++++
 /*
 				$row['blog_name'] 	= $this->_utf8_to_entities($row['blog_name']);
 				$row['title'] 		= $this->_utf8_to_entities($row['title']);
@@ -515,10 +490,8 @@ class NP_TrackBack extends NucleusPlugin {
 				$row['blog_name'] 	= mb_convert_encoding($row['blog_name'], _CHARSET, 'UTF-8');
 				$row['title'] 		= mb_convert_encoding($row['title'], _CHARSET, 'UTF-8');
 				$row['excerpt'] 	= mb_convert_encoding($row['excerpt'], _CHARSET, 'UTF-8');
-//modify end+++++++++
 			}				
 
-//modify start+++++++++
 /*
 			$iVars = array(
 				'action' 	=> $this->getTrackBackUrl($tb_id),
@@ -540,19 +513,15 @@ class NP_TrackBack extends NucleusPlugin {
 				'date'	   	=> htmlspecialchars(strftime($this->getOption('dateFormat'), $row['timestamp']), ENT_QUOTES)
 			);
 
-//mod by cles
 			if( $enableHideurl && $this->getOption('HideUrl') == 'yes' )
 				$iVars['url'] = $CONF['ActionURL'] . '?action=plugin&amp;name=TrackBack&amp;type=redirect&amp;tb_id=' . intval($tb_id) . '&amp;urlHash=' . $row['urlHash'];
 			else
 				$iVars['url'] = $row['url'];
-//mod by cles end
 
-//modify end+++++++++
 			echo TEMPLATE::fill($this->getOption('tplItem'), $iVars);
 			
 		}
 
-//modify start+++++++++
 		$q = '
 			SELECT 
 				count(*) 
@@ -581,7 +550,6 @@ class NP_TrackBack extends NucleusPlugin {
 
 <?php
 		}
-//modify end+++++++++
 
 		if (sql_num_rows($res) == 0) 
 		{
@@ -616,7 +584,6 @@ class NP_TrackBack extends NucleusPlugin {
 
 		$form = true; $error = true; $success = false;
 		sendContentType('text/html', 'admin-trackback', _CHARSET);	
-//modify start+++++++++
 //			include ($this->getDirectory() . '/templates/form.html');
 		require_once($this->getDirectory() . '/template.php');
 		$mTemplate = new Trackback_Template(null, $this->getDirectory());
@@ -628,7 +595,6 @@ class NP_TrackBack extends NucleusPlugin {
 		$mTemplate->set ('status', $status);
 		$mTemplate->template('templates/form.html');
 		echo $mTemplate->fetch();
-//modify end+++++++++
 	}
 	
 	function showManualPingSuccess($itemid, $status = '') {
@@ -636,7 +602,6 @@ class NP_TrackBack extends NucleusPlugin {
 
 		$form = false; $error = false; $success = true;
 		sendContentType('text/html', 'admin-trackback', _CHARSET);	
-//modify start+++++++++
 		//include ($this->getDirectory() . '/templates/form.html');
 		require_once($this->getDirectory() . '/template.php');
 		$mTemplate = new Trackback_Template(null, $this->getDirectory());
@@ -648,7 +613,6 @@ class NP_TrackBack extends NucleusPlugin {
 		$mTemplate->set ('status', $status);
 		$mTemplate->template('templates/form.html');
 		echo $mTemplate->fetch();
-//modify end+++++++++
 	}
 	
 	function showManualPingForm($itemid, $text = '') {
@@ -663,7 +627,6 @@ class NP_TrackBack extends NucleusPlugin {
 		}
 		
 		sendContentType('text/html', 'admin-trackback', _CHARSET);	
-//modify start+++++++++
 		//include ($this->getDirectory() . '/templates/form.html');
 		require_once($this->getDirectory() . '/template.php');
 		$mTemplate = new Trackback_Template(null, $this->getDirectory());
@@ -675,7 +638,6 @@ class NP_TrackBack extends NucleusPlugin {
 		$mTemplate->set ('status', $status);
 		$mTemplate->template('templates/form.html');
 		echo $mTemplate->fetch();
-//modify end+++++++++
 	}
 
 	/**
@@ -740,7 +702,6 @@ class NP_TrackBack extends NucleusPlugin {
 			$title      = $item['title'];
 			$excerpt    = $item['body'];
 
-//modify start+++++++++
 /*
 			if (_CHARSET != 'UTF-8')
 			{
@@ -757,18 +718,15 @@ class NP_TrackBack extends NucleusPlugin {
 			$title      = $this->_restore_to_utf8($title);
 			$excerpt    = $this->_restore_to_utf8($excerpt);
 			$blog_name  = $this->_restore_to_utf8($blog_name);
-//modify end+++++++++
 
 			$excerpt    = $this->_cut_string($excerpt, 200);
 
 			
-//modify start+++++++++
 /*
 			$CONF['ItemURL'] = preg_replace('/\/$/', '', $blog->getURL());   
 			$url 	= createItemLink($item['itemid'],'');	
 */
 			$url 	= $this->_createItemLink($item['itemid'],$blog);	
-//modify end+++++++++
 
 			// Use UTF-8 charset for output
 			header('Content-Type: text/xml');
@@ -896,7 +854,6 @@ class NP_TrackBack extends NucleusPlugin {
 		
 		fclose($socket);
 
-//modify start+++++++++
 		list($header, $body) = split("\r\n\r\n", $result, 2);
 		preg_match("/HTTP\/1\.[0-1] ([0-9]+) ([^\r\n]*)\r?\n/", $header, $httpresp);
 		$respCd = $httpresp[1];
@@ -933,7 +890,6 @@ class NP_TrackBack extends NucleusPlugin {
 		
 		return '';
 	} 
-//modify end+++++++++
 
 	/* 
 	 *  Handle a Trackback ping sent to this website
@@ -944,18 +900,14 @@ class NP_TrackBack extends NucleusPlugin {
 		// Defaults
 		$spam       = false;
 		$link       = false;
-//modify start+++++++++
 //			$block 	    = true;
 		$block 	    = false;
-//modify end+++++++++
 		if ($tb_id == 0)
 		$tb_id 		= intRequestVar('tb_id');
 		
 		$rss 		= requestVar('__mode') == 'rss'; 
-//mod by cles
 		$enableLinkCheck = $this->isEnableLinkCheck($tb_id);
 		$block = ( $enableLinkCheck ) ? true : false ;
-//mod by cles end
 
 		if (!$tb_id) {
 			return 'TrackBack ID is missing (tb_id)';
@@ -970,19 +922,15 @@ class NP_TrackBack extends NucleusPlugin {
 			$this->rssResponse($tb_id);
 			return;
 		}
-//mod by cles
 		// check: accept pings.
 		$blogId = getBlogIDFromItemID($tb_id);
 		$isAcceptPing = $this->isAcceptTrackBack($tb_id);
 			
 		if (! $isAcceptPing)
 			return 'Sorry, no trackback pings are accepted.';
-//mod by cles end
 
 		// 1. Get attributes
-//modify start+++++++++
 		$b =& $manager->getBlog($blogId);
-//modify end+++++++++
 		$url 		= requestVar('url');
 		$title 		= requestVar('title');
 		$excerpt 	= requestVar('excerpt');
@@ -996,16 +944,13 @@ class NP_TrackBack extends NucleusPlugin {
 		}
 
 		// 2. Conversion of encoding...
-//modify start+++++++++
 /*			if (preg_match ("/;\s*charset=([^\n]+)/is", $_SERVER["CONTENT_TYPE"], $regs))
 			$encoding = strtoupper(trim($regs[1]));
 		else
 			$encoding = $this->_detect_encoding($excerpt);
 */
 		$encoding = $this->_detect_encoding($excerpt);
-//modify end+++++++++
 		
-//modify start+++++++++
 		if (_CHARSET != 'UTF-8'){
 			$title = $this->_strip_controlchar(strip_tags(mb_convert_encoding($title, _CHARSET, $encoding)));
 			$excerpt = $this->_strip_controlchar(strip_tags(mb_convert_encoding($excerpt, _CHARSET, $encoding)));
@@ -1019,7 +964,6 @@ class NP_TrackBack extends NucleusPlugin {
 			$excerpt    = $this->_decode_entities(strip_tags($excerpt));
 			$blog_name  = $this->_decode_entities(strip_tags($blog_name));
 		}
-//modify end+++++++++
 
 		// 4. Save data in the DB
 		$res = @sql_query('
@@ -1049,7 +993,6 @@ class NP_TrackBack extends NucleusPlugin {
 					tb_id     = "'.$tb_id.'"
 			');
 */
-//modify start+++++++++
 			$rows = sql_fetch_assoc($res);
 			$spam = ( $rows['block'] || $rows['spam'] ) ? true : false;
 			$res = @sql_query('
@@ -1064,7 +1007,6 @@ class NP_TrackBack extends NucleusPlugin {
 					url       = \''.sql_real_escape_string($url).'\' AND 
 					tb_id     = \''.sql_real_escape_string(intval($tb_id)).'\'
 			');
-//modify end+++++++++
 
 			if (!$res) {
 				return 'Could not update trackback data: '.sql_error();
@@ -1072,7 +1014,6 @@ class NP_TrackBack extends NucleusPlugin {
 		} 
 		else 
 		{
-//mod by cles
 			// spam block
 			$res = @sql_query('SELECT id FROM '.sql_table('plugin_tb').' WHERE block = 1 and url = \''.sql_real_escape_string($url).'\'' );
 			if (sql_num_rows($res) != 0) {
@@ -1080,7 +1021,6 @@ class NP_TrackBack extends NucleusPlugin {
 				ACTIONLOG :: add(INFO, "Trackback: Duplicated Blocked Trackback [ignore] (itemid:$tb_id from: $url)");
 				return 'Sorry, trackback ping is not accepted.';
 			}
-//mod by cles end
 						
 			// 4. SPAM check (for SpamCheck API 2 /w compat. API 1)
 			$spamcheck = array (
@@ -1106,9 +1046,8 @@ class NP_TrackBack extends NucleusPlugin {
 			}
 			
 			// 5. Content check (TO DO)
-			if($spam == false || $enableLinkCheck == 'ignore' )	//modify
+			if($spam == false || $enableLinkCheck == 'ignore' )
 			{
-//mod by cles
 //					$contents = $this->retrieveUrl ($url);
 //				
 //					if (preg_match("/(".preg_quote($_SERVER["REQUEST_URI"], '/').")|(".preg_quote($_SERVER["SERVER_NAME"], '/').")/i", $contents)) {	
@@ -1144,20 +1083,15 @@ class NP_TrackBack extends NucleusPlugin {
 						}
 					}
 				}
-//mod by cles end
 			}
 
 			// 6. Determine if Trackback is safe...
-//modify start+++++++++
 //				$block = $spam == true || $link == false;
 //				$block = $spam == true ;
-//modify end+++++++++
-//mod by cles
 			if ( $enableLinkCheck )
 				$block = ($spam == true || $link == false);
 			else
 				$block = $spam == true ;
-//mod by cles end
 			// New TB, insert it
 /*
 			$query = '
@@ -1175,7 +1109,6 @@ class NP_TrackBack extends NucleusPlugin {
 					timestamp = '.mysqldate(time()).'
 			';
 */
-//modify start+++++++++
 			$query = '
 				INSERT INTO 
 					'.sql_table('plugin_tb').' 
@@ -1190,7 +1123,6 @@ class NP_TrackBack extends NucleusPlugin {
 					blog_name = \''.sql_real_escape_string($blog_name).'\',
 					timestamp = '.mysqldate($b->getCorrectTime()).'
 			';
-//modify end+++++++++
 			
 			$res = @sql_query($query);
 
@@ -1215,7 +1147,6 @@ class NP_TrackBack extends NucleusPlugin {
 				'blogname' => $blog_name
 			);
 			
-//modify start+++++++++
 /*
 			$vars = array (
 				'tb_id'    => $tb_id,
@@ -1226,7 +1157,6 @@ class NP_TrackBack extends NucleusPlugin {
 			);
 */				
 //maybe not needed because japanese version has "mb_send_mail" in function notify
-//modify end+++++++++
 			
 			$mailto_title = TEMPLATE::fill($this->notificationMailTitle, $vars);
 			$mailto_msg   = TEMPLATE::fill($this->notificationMail, $vars);
@@ -1240,14 +1170,12 @@ class NP_TrackBack extends NucleusPlugin {
 			$notify = new NOTIFICATION($notifyAddrs);
 			$notify->notify($mailto_title, $mailto_msg , $CONF['AdminEmail']);
 			
-//mod by cles+++++++++++	
 			if ($manager->pluginInstalled('NP_Cache')){
 				$p =& $manager->getPlugin('NP_Cache');
 				$p->setCurrentBlog($tb_id);
 				$p->cleanItem($tb_id);
 				$p->cleanArray(array('index'));
 			}
-//mod by cles end +++++++++++	
 		}
 
 		if( $block )
@@ -1283,7 +1211,6 @@ class NP_TrackBack extends NucleusPlugin {
 	}
 
 
-//mod by cles
 	function redirect($tb_id, $urlHash){
 		global $CONF;
 		$query = 'SELECT url FROM '.sql_table('plugin_tb').' WHERE tb_id='.intval($tb_id).' and md5(url)="'.$urlHash.'"';
@@ -1356,7 +1283,6 @@ class NP_TrackBack extends NucleusPlugin {
 		return $ret;
 	}
 	
-//mod by cles end
 
 	/**************************************************************************************
 	 * EVENTS
@@ -1535,12 +1461,10 @@ class NP_TrackBack extends NucleusPlugin {
 					
 					while (list($url, $title) = each ($this->larray))
 					{
-//modify start+++++++++
 						if (_CHARSET != 'UTF-8') {
 							$title = $this->_utf8_to_entities($title);
 							$title = mb_convert_encoding($title, _CHARSET, 'UTF-8');
 						}
-//modify end+++++++++
 
 						echo '<input type="checkbox" name="tb_url_'.$i.
 							 '" value="'.$url.'" id="tb_url_'.$i.
@@ -1578,7 +1502,6 @@ class NP_TrackBack extends NucleusPlugin {
 		$localflag = array();
 		
 		$ping_url = requestVar('trackback_ping_url');
-//modify start+++++++++
 /*
 		if ($ping_url) {
 			$ping_urls[0] = $ping_url;
@@ -1593,7 +1516,6 @@ class NP_TrackBack extends NucleusPlugin {
 				$ping_urls_count++;
 			}
 		}
-//modify end+++++++++
 
 		$tb_url_amount = requestVar('tb_url_amount');
 		for ($i=0;$i<$tb_url_amount;$i++) {
@@ -1680,12 +1602,10 @@ class NP_TrackBack extends NucleusPlugin {
 		{
 			if ($row['title'] != '')
 			{
-//modify start+++++++++
 				if (_CHARSET != 'UTF-8'){
 					$row['title'] = mb_convert_encoding($row['title'], 'UTF-8', _CHARSET);
 					$row['title'] = $this->_decode_entities($row['title']);
 				}
-//modify end+++++++++
 				return array (
 					$row['url'], $row['title']
 				);
@@ -1714,7 +1634,6 @@ class NP_TrackBack extends NucleusPlugin {
 					}
 
 					$uri   = $this->_decode_entities($uri);
-//modify start+++++++++
 					if (_CHARSET != 'UTF-8')
 						$convertedTitle = mb_convert_encoding($title, _CHARSET, 'UTF-8');
 					else
@@ -1725,7 +1644,6 @@ class NP_TrackBack extends NucleusPlugin {
 */
 					// Store in cache
 					$res = sql_query("INSERT INTO ".sql_table('plugin_tb_lookup')." (link, url, title) VALUES ('".sql_real_escape_string($link)."','".sql_real_escape_string($uri)."','".sql_real_escape_string($convertedTitle)."')");
-//modify end+++++++++
 					$title = $this->_decode_entities($title);
 
 					return array (
@@ -1859,9 +1777,7 @@ class NP_TrackBack extends NucleusPlugin {
 	/* Internal helper functions for dealing with external file retrieval                 */
 
 	function retrieveUrl ($url) {
-//mod by cles
 		$ua = ini_set('user_agent', $this->userAgent);
-//mod by cles end
 		if (function_exists('curl_init') && $this->useCurl > 0)
 		{
 			// Set options
@@ -1887,20 +1803,16 @@ class NP_TrackBack extends NucleusPlugin {
 		}
 		elseif ($fp = @fopen ($url, "rb"))
 		{
-//mod by cles
 //				$contents = fread($fp, 8192);
 			$contents = '';
 			while (!feof($fp)) {
 				$contents .= fread($fp, 8192);
 			}
-//mod by cles end
 			$headers  = '';
 			
 			fclose($fp);
 		}		
-//mod by cles
 		ini_set('user_agent', $ua);
-//mod by cles end
 		
 		// Next normalize the encoding to UTF8...
 		$contents = $this->_convert_to_utf8_auto($contents, $headers);
@@ -1920,7 +1832,6 @@ class NP_TrackBack extends NucleusPlugin {
 		'&gt;'    		=> '&#62;',		
 	);
 
-//modify start+++++++++
 	function _restore_to_utf8($contents)
 	{
 		if (_CHARSET != 'UTF-8')
@@ -1930,10 +1841,8 @@ class NP_TrackBack extends NucleusPlugin {
 		$contents = $this->_decode_entities(strip_tags($contents));
 		return $contents;
 	}
-//modify end+++++++++
 	function _detect_encoding($string)
 	{
-//modify start+++++++++
 		if (function_exists('mb_convert_encoding')) {
 			$encoding = (preg_match ("/;\s*charset=([^\n]+)/is", serverVar("CONTENT_TYPE"), $regs))? 
 				strtoupper(trim($regs[1])):
@@ -1946,7 +1855,6 @@ class NP_TrackBack extends NucleusPlugin {
 			}
 			return ( $encoding ) ? $encoding : _CHARSET;
 		}
-//modify end+++++++++
 		if (!ereg("[\x80-\xFF]", $string) && !ereg("\x1B", $string))
 		return 'US-ASCII';
 		
@@ -1969,7 +1877,6 @@ class NP_TrackBack extends NucleusPlugin {
 	{
 		$done = false;
 		
-//modify start+++++++++
 //			if (!$done && function_exists('iconv'))  
 //			{
 //			
@@ -2008,7 +1915,6 @@ class NP_TrackBack extends NucleusPlugin {
 				$done = true;
 			}
 		}
-//modify end+++++++++
 		return $contents;
 	}
 	
@@ -2268,7 +2174,6 @@ $string = str_replace("\0","",$string);
 return $string;
 }
 
-//modify start+++++++++
 function checkTableVersion(){
 			$res = sql_query("SHOW FIELDS from ".sql_table('plugin_tb') );
 			$fieldnames = array();
@@ -2277,7 +2182,6 @@ function checkTableVersion(){
 			}
 			return false;
 }
-//modify end+++++++++
 
 /*---------------------------------------------------------------------------------- */
 /*   LOCAL                                                                           */
@@ -2379,7 +2283,6 @@ function canDelete($tb_id) {
 	/**************************************************************************************/
 	/* Plugin API calls, for installation, configuration and setup                        */
 
-//modify start+++++++++
 /*
 	function getTableList()   { 		return array(sql_table("plugin_tb"), sql_table("plugin_tb_lookup")); }
 	function getEventList()   { 		return array('QuickMenu','PostAddItem','AddItemFormExtras','EditItemFormExtras','PreUpdateItem','PrepareItemForEdit', 'BookmarkletExtraHead'); }
@@ -2387,17 +2290,14 @@ function canDelete($tb_id) {
 	function getTableList()   { 		return array(sql_table("plugin_tb"), sql_table("plugin_tb_lookup"), sql_table('plugin_tb_lc')); }
 
 	function getEventList()   { 		return array('QuickMenu','PostAddItem','AddItemFormExtras','EditItemFormExtras','PreUpdateItem','PrepareItemForEdit', 'BookmarkletExtraHead', 'RetrieveTrackback', 'SendTrackback', 'InitSkinParse'); }
-//modify end+++++++++
 	function getMinNucleusVersion() {	return 350; }
 
 	function supportsFeature($feature) {
 		switch($feature) {
 			case 'SqlTablePrefix':
 				return 1;
-//modify start+++++++++
 //				case 'HelpPage':
 //					return 1;
-//modify end+++++++++
 			default:
 				return 0;
 		}
@@ -2429,12 +2329,10 @@ function canDelete($tb_id) {
 		$this->createOption('tplEmpty',	   _TB_tplEmpty, 'textarea', _TB_tplEmpty_VAL);
 		$this->createOption('tplItem',	   _TB_tplItem, 'textarea', _TB_tplItem_VAL);
 		$this->createOption('tplFooter',   _TB_tplFooter, 'textarea', _TB_tplFooter_VAL);
-//mod by cles
 		$this->createOption('tplLocalHeader',   _TB_tplLocalHeader, 'textarea', _TB_tplLocalHeader_VAL);
 		$this->createOption('tplLocalEmpty',	   _TB_tplLocalEmpty, 'textarea', _TB_tplLocalEmpty_VAL);
 		$this->createOption('tplLocalItem',	   _TB_tplLocalItem, 'textarea', _TB_tplLocalItem_VAL);
 		$this->createOption('tplLocalFooter',   _TB_tplLocalFooter, 'textarea', _TB_tplLocalFooter_VAL);
-//mod by cles end
 
 		$this->createOption('tplTbNone',   _TB_tplTbNone, 'text', "No Trackbacks");
 		$this->createOption('tplTbOne',    _TB_tplTbOne, 'text', "1 Trackback");
@@ -2443,7 +2341,6 @@ function canDelete($tb_id) {
 
 		$this->createOption('NotifyEmail', _TB_NotifyEmail,'text','');
 		$this->createOption('DropTable',   _TB_DropTable,'yesno','no');
-//mod by cles
 		$this->createOption('HideUrl',_TB_HideUrl,'yesno','yes');
 		$this->createOption('ajaxEnabled',_TB_ajaxEnabled,'yesno','no');
 
@@ -2453,7 +2350,6 @@ function canDelete($tb_id) {
 		$this->createBlogOption('NotifyEmailBlog', _TB_NotifyEmailBlog,'text','');	
 		$this->createBlogOption('isAcceptW/OLinkDef',_TB_isAcceptWOLinkDef,'select','block', _TB_isAcceptWOLinkDef_VAL);
 		$this->createBlogOption('AllowTrackBack',_TB_AllowTrackBack,'yesno','yes');
-//mod by cles end
 
 		/* Create tables */
 		sql_query("
@@ -2486,10 +2382,8 @@ function canDelete($tb_id) {
 				PRIMARY KEY (`link` (100))
 			)
 		");
-//modify start+++++++++
 		@sql_query('ALTER TABLE `' . sql_table('plugin_tb') . '` ADD INDEX `tb_id_block_timestamp_idx` ( `tb_id`, `block`, `timestamp` DESC )');
 		@sql_query('CREATE TABLE IF NOT EXISTS ' . sql_table('plugin_tb_lc'). ' (tb_id int(11) not null, from_id int(11) not null, PRIMARY KEY (tb_id,from_id))');
-//modify end+++++++++
 	}
 
 	function uninstall() {
