@@ -2456,7 +2456,7 @@ function _strip_controlchar($string){
 
 		function getEventList()   { 		return array('QuickMenu','PostAddItem','AddItemFormExtras','EditItemFormExtras','PreUpdateItem','PrepareItemForEdit', 'BookmarkletExtraHead', 'RetrieveTrackback', 'SendTrackback', 'InitSkinParse'); }
 //modify end+++++++++
-		function getMinNucleusVersion() {	return 330; }
+		function getMinNucleusVersion() {	return 350; }
 	
 		function supportsFeature($feature) {
 			switch($feature) {
