@@ -25,78 +25,16 @@ define('NP_TRACKBACK_LINKCHECK_STRICT', 1);
 define('NP_TRACKBACK_USE_XML_PARSER', 1);
 define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJIS');
 
-	class NP_TrackBack_XMLParser {
-		function NP_TrackBack_XMLParser(){
-			$this->isError = false;
-			$this->inTarget = false;
-		}
-	
-		function parse($data){
-			$rx = '/(<'.'?xml.*encoding=[\'"])(.*?)([\'"].*?'.'>)/m';
-			if (preg_match($rx, $data, $m)) {
-				$encoding = strtoupper($m[2]);
-			} else {
-				$encoding = mb_detect_encoding($data, NP_TRACKBACK_ENCODING_DETECT_ORDER);
-			}
-			
-			if($encoding == "UTF-8" || $encoding == "ISO-8859-1") {
-				// noting
-			} else {
-				$data = @mb_convert_encoding($data, "UTF-8", $encoding);
-				$data = str_replace ( $m[0], $m[1].'UTF-8'.$m[3], $data);
-				$encoding = 'UTF-8';
-			}
-			
-			$this->parser = xml_parser_create($encoding);
-			xml_set_object($this->parser, $this);
-			xml_set_element_handler($this->parser, "_open", "_close");
-			xml_set_character_data_handler($this->parser, "_cdata");
-			xml_parser_set_option($this->parser, XML_OPTION_TARGET_ENCODING, 'UTF-8').
-			
-			$this->words = array();
-			xml_parse($this->parser, $data);
-			$errcode = xml_get_error_code($this->parser);
-		    if ( $errcode != XML_ERROR_NONE ) {
-		    	$this->isError = true;
-				$this->message = 'XML Parse Error: ' . xml_error_string($errcode) . ' in '. xml_get_current_line_number($this->parser);
-		    }
-			return $this->message;
-		}
-	
-		function free(){
-			xml_parser_free($this->parser);
-		}
-	
-		function _open($parser, $name, $attribute){
-			switch( $name ){
-				case 'MESSAGE':
-					$this->inTarget = 'MESSAGE';
-					break;
-				case 'ERROR':
-					$this->inTarget = 'ERROR';
-					break;
-			}
-		}
-	
-		function _close($parser, $name){
-			if( $name == $this->inTarget ) $this->inTarget = null;
-		}
-	
-		function _cdata($parser, $data){
-			switch( $this->inTarget ){
-				case 'MESSAGE':
-					$this->message = trim($data);
-					break;
-				case 'ERROR':
-					$this->isError = ($data ? true : false);
-					break;
-			}
-		}
-	}   
-   
 	class NP_TrackBack extends NucleusPlugin {
 		var $useCurl = 1; // use curl? 2:precheck+read by curl, 1: read by curl 0: fread
 
+		function getName()   	  { return 'TrackBack';   }
+		function getAuthor() 	  { return 'rakaz + nakahara21 + hsur'; }
+		function getURL()    	  { return 'http://blog.cles.jp/np_cles/category/31/subcatid/3'; }
+		function getVersion()	  { return '2.0.3 jp13'; }
+		function getDescription() { return '[$Revision: 1.311 $]<br />' . _TB_DESCRIPTION; }
+		function hasAdminArea()   { return 1; }
+	
 //modify start+++++++++
 		function _createItemLink($itemid, $b){
 			global $CONF, $manager;
@@ -2441,12 +2379,6 @@ function _strip_controlchar($string){
 		/**************************************************************************************/
 		/* Plugin API calls, for installation, configuration and setup                        */
 	
-		function getName()   	  { 		return 'TrackBack';   }
-		function getAuthor() 	  { 		return 'rakaz + nakahara21 + hsur'; }
-		function getURL()    	  { 		return 'http://blog.cles.jp/np_cles/category/31/subcatid/3'; }
-		function getVersion()	  { 		return '2.0.3 jp13'; }
-		function getDescription() { 		return '[$Revision: 1.311 $]<br />' . _TB_DESCRIPTION; }
-	
 //modify start+++++++++
 /*
 		function getTableList()   { 		return array(sql_table("plugin_tb"), sql_table("plugin_tb_lookup")); }
@@ -2470,9 +2402,6 @@ function _strip_controlchar($string){
 					return 0;
 			}
 		}
-
-	
-		function hasAdminArea() { 			return 1; }
 
 		function event_QuickMenu(&$data) {
 			global $member, $nucleus, $blogid;
@@ -2584,3 +2513,73 @@ function _strip_controlchar($string){
 			$this->userAgent = 'NucleusCMS NP_TrackBack plugin ( '.$this->getVersion().' )';
 		}
 	}
+
+	class NP_TrackBack_XMLParser {
+		function NP_TrackBack_XMLParser(){
+			$this->isError = false;
+			$this->inTarget = false;
+		}
+	
+		function parse($data){
+			$rx = '/(<'.'?xml.*encoding=[\'"])(.*?)([\'"].*?'.'>)/m';
+			if (preg_match($rx, $data, $m)) {
+				$encoding = strtoupper($m[2]);
+			} else {
+				$encoding = mb_detect_encoding($data, NP_TRACKBACK_ENCODING_DETECT_ORDER);
+			}
+			
+			if($encoding == "UTF-8" || $encoding == "ISO-8859-1") {
+				// noting
+			} else {
+				$data = @mb_convert_encoding($data, "UTF-8", $encoding);
+				$data = str_replace ( $m[0], $m[1].'UTF-8'.$m[3], $data);
+				$encoding = 'UTF-8';
+			}
+			
+			$this->parser = xml_parser_create($encoding);
+			xml_set_object($this->parser, $this);
+			xml_set_element_handler($this->parser, "_open", "_close");
+			xml_set_character_data_handler($this->parser, "_cdata");
+			xml_parser_set_option($this->parser, XML_OPTION_TARGET_ENCODING, 'UTF-8').
+			
+			$this->words = array();
+			xml_parse($this->parser, $data);
+			$errcode = xml_get_error_code($this->parser);
+		    if ( $errcode != XML_ERROR_NONE ) {
+		    	$this->isError = true;
+				$this->message = 'XML Parse Error: ' . xml_error_string($errcode) . ' in '. xml_get_current_line_number($this->parser);
+		    }
+			return $this->message;
+		}
+	
+		function free(){
+			xml_parser_free($this->parser);
+		}
+	
+		function _open($parser, $name, $attribute){
+			switch( $name ){
+				case 'MESSAGE':
+					$this->inTarget = 'MESSAGE';
+					break;
+				case 'ERROR':
+					$this->inTarget = 'ERROR';
+					break;
+			}
+		}
+	
+		function _close($parser, $name){
+			if( $name == $this->inTarget ) $this->inTarget = null;
+		}
+	
+		function _cdata($parser, $data){
+			switch( $this->inTarget ){
+				case 'MESSAGE':
+					$this->message = trim($data);
+					break;
+				case 'ERROR':
+					$this->isError = ($data ? true : false);
+					break;
+			}
+		}
+	}   
+   
