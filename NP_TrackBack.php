@@ -25,6 +25,24 @@ define('NP_TRACKBACK_LINKCHECK_STRICT', 1);
 define('NP_TRACKBACK_USE_XML_PARSER', 1);
 define('NP_TRACKBACK_ENCODING_DETECT_ORDER', 'ASCII,ISO-2022-JP,UTF-8,EUC-JP,SJIS');
 
+if(!function_exists('hsc'))
+{
+    function hsc($string)
+    {
+    	if(version_compare(PHP_VERSION, '5.2.3', '>='))
+    		return htmlspecialchars($string, ENT_QUOTES, _CHARSET, false);
+    	else
+    	{
+    		if(function_exists('htmlspecialchars_decode'))
+    			$string = htmlspecialchars_decode($string, ENT_QUOTES);
+    		else
+    			$string = strtr($string, array_flip(get_html_translation_table(HTML_SPECIALCHARS, ENT_QUOTES)));
+    		
+    		return htmlspecialchars($string, ENT_QUOTES, _CHARSET);
+    	}
+    }
+}
+
 class NP_TrackBack extends NucleusPlugin {
 	var $useCurl = 1; // use curl? 2:precheck+read by curl, 1: read by curl 0: fread
 
@@ -2040,13 +2058,15 @@ class NP_TrackBack extends NucleusPlugin {
 		
 		while ($o = sql_fetch_object($res)) {
 			$canDelete = $this->canDelete($tb_id);
+			$_ = array($CONF['ActionURL'], intval($tb_id), intval($o->from_id));
+			$delUrl = $manager->addTicketToUrl(vsprintf('%s?action=plugin&name=TrackBack&type=deletelc&tb_id=%s&from_id=%s'),$_);
 			$data = array(
 				'url' => createItemLink($o->from_id),
 				'blogname' => htmlspecialchars(getBlogNameFromID($o->iblog)),
 				'timestamp' => strftime('%Y-%m-%d',strtotime($o->itime)),
 				'title' => htmlspecialchars($o->ititle),
 				'excerpt' => htmlspecialchars(shorten(strip_tags($o->ibody),200,'...')),
-				'delete' => $canDelete?'<a href="'. $manager->addTicketToUrl($CONF['ActionURL'].'?action=plugin&amp;name=TrackBack&amp;type=deletelc&amp;tb_id='.intval($tb_id).'&amp;from_id='.intval($o->from_id)).'">[delete]</a>':'',
+				'delete' => $canDelete?'<a href="'. hsc($delUrl) .'">[delete]</a>':'',
 				'tburl' => $this->getTrackBackUrl($tb_id),
 				'commentcount'=> quickQuery('SELECT COUNT(*) as result FROM '.sql_table('comment').' WHERE citem=' . intval($o->from_id))
 			);
