@@ -373,9 +373,9 @@ class NP_TrackBack extends NucleusPlugin {
 		while ($row = sql_fetch_array($res))
 		{
 
-			$row['blog_name'] 	= htmlspecialchars($row['blog_name'], ENT_QUOTES);
-			$row['title']  		= htmlspecialchars($row['title'], ENT_QUOTES);
-			$row['excerpt']  	= htmlspecialchars($row['excerpt'], ENT_QUOTES);
+			$row['blog_name'] 	= hsc($row['blog_name']);
+			$row['title']  		= hsc($row['title']);
+			$row['excerpt']  	= hsc($row['excerpt']);
 			if (_CHARSET != 'UTF-8') {
 				$row['blog_name'] 	= $this->_restore_to_utf8($row['blog_name']);
 				$row['title'] 		= $this->_restore_to_utf8($row['title']);
@@ -390,8 +390,8 @@ class NP_TrackBack extends NucleusPlugin {
 				'name'  	=> $row['blog_name'],
 				'title' 	=> $row['title'],
 				'excerpt'	=> $this->_cut_string($row['excerpt'], 400),
-				'url'		=> htmlspecialchars($row['url'], ENT_QUOTES),
-				'date'	   	=> htmlspecialchars(strftime($this->getOption('dateFormat'), $row['timestamp']), ENT_QUOTES)
+				'url'		=> hsc($row['url']),
+				'date'	   	=> hsc(strftime($this->getOption('dateFormat'), $row['timestamp']))
 			);
 
 			if( $this->getOption('HideUrl') == 'yes' )
@@ -456,8 +456,8 @@ class NP_TrackBack extends NucleusPlugin {
 		);
 		
 		if ( $member->isLoggedIn() ){
-			$adminurl = htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'] . 'trackback/index.php?action=list&id=' . intval($tb_id)), ENT_QUOTES);
-			$pingformurl = htmlspecialchars($manager->addTicketToUrl($CONF['PluginURL'] . 'trackback/index.php?action=ping&id=' . intval($tb_id)), ENT_QUOTES);
+			$adminurl = hsc($manager->addTicketToUrl($CONF['PluginURL'] . 'trackback/index.php?action=list&id=' . intval($tb_id)));
+			$pingformurl = hsc($manager->addTicketToUrl($CONF['PluginURL'] . 'trackback/index.php?action=ping&id=' . intval($tb_id)));
 			$gVars['admin'] = '<a href="' . $adminurl . '" target="_blank">[admin]</a>';
 			$gVars['pingform'] = '<a href="' . $pingformurl . '" target="_blank">[pingform]</a>';
 		}
@@ -468,9 +468,9 @@ class NP_TrackBack extends NucleusPlugin {
 		while ($amount != 0 && $row = sql_fetch_array($res))
 		{
 
-			$row['blog_name'] 	= htmlspecialchars($row['blog_name'], ENT_QUOTES);
-			$row['title']  		= htmlspecialchars($row['title'], ENT_QUOTES);
-			$row['excerpt']  	= htmlspecialchars($row['excerpt'], ENT_QUOTES);
+			$row['blog_name'] 	= hsc($row['blog_name']);
+			$row['title']  		= hsc($row['title']);
+			$row['excerpt']  	= hsc($row['excerpt']);
 
 			if (_CHARSET != 'UTF-8') {
 				$row['blog_name'] 	= $this->_restore_to_utf8($row['blog_name']);
@@ -485,11 +485,11 @@ class NP_TrackBack extends NucleusPlugin {
 			$iVars = array(
 				'action' 	=> $this->getTrackBackUrl($tb_id),
 				'form' 	 	=> $this->getManualPingUrl($tb_id),
-				'name'  	=> htmlspecialchars($row['blog_name'], ENT_QUOTES),
-				'title' 	=> htmlspecialchars($row['title'], ENT_QUOTES),
-				'excerpt'	=> htmlspecialchars($this->_cut_string($row['excerpt'], 400), ENT_QUOTES),
-				'url'		=> htmlspecialchars($row['url'], ENT_QUOTES),
-				'date'	   	=> htmlspecialchars(strftime($this->getOption('dateFormat'), $row['timestamp']), ENT_QUOTES)
+				'name'  	=> hsc($row['blog_name']),
+				'title' 	=> hsc($row['title']),
+				'excerpt'	=> hsc($this->_cut_string($row['excerpt'], 400)),
+				'url'		=> hsc($row['url']),
+				'date'	   	=> hsc(strftime($this->getOption('dateFormat'), $row['timestamp']))
 			);
 
 			if( $enableHideurl && $this->getOption('HideUrl') == 'yes' )
@@ -641,7 +641,7 @@ class NP_TrackBack extends NucleusPlugin {
 		$title  = strip_tags($item['title']);
 		$desc  	= strip_tags($item['body']);
 		$desc   = $this->_cut_string($desc, 200);
-		$desc   = htmlspecialchars($desc, ENT_QUOTES);
+		$desc   = hsc($desc);
 		
 		?>
 		<!--
@@ -693,9 +693,9 @@ class NP_TrackBack extends NucleusPlugin {
 			echo "\t<error>0</error>\n";
 			echo "\t<rss version='0.91'>\n";
 			echo "\t\t<channel>\n";
-			echo "\t\t\t<title>".htmlspecialchars($title, ENT_QUOTES)."</title>\n";
-			echo "\t\t\t<link>".htmlspecialchars($url, ENT_QUOTES)."</link>\n";
-			echo "\t\t\t<description>".htmlspecialchars($excerpt, ENT_QUOTES)."</description>\n";
+			echo "\t\t\t<title>".hsc($title)."</title>\n";
+			echo "\t\t\t<link>".hsc($url)."</link>\n";
+			echo "\t\t\t<description>".hsc($excerpt)."</description>\n";
 
 			$query = 'SELECT url, blog_name, excerpt, title, UNIX_TIMESTAMP(timestamp) as timestamp FROM '.sql_table('plugin_tb').' WHERE tb_id='.intval($tb_id).' AND block = 0 ORDER BY timestamp DESC';
 			$res = sql_query($query);
@@ -703,11 +703,11 @@ class NP_TrackBack extends NucleusPlugin {
 			{
 				// No need to do conversion, because it is already UTF-8
 				$data = array (
-					'url' 		=> htmlspecialchars($o->url, ENT_QUOTES),
-					'blogname' 	=> htmlspecialchars($this->_restore_to_utf8($o->blog_name), ENT_QUOTES),
+					'url' 		=> hsc($o->url),
+					'blogname' 	=> hsc($this->_restore_to_utf8($o->blog_name)),
 					'timestamp' => strftime('%Y-%m-%d',$o->timestamp),
-					'title' 	=> htmlspecialchars($this->_restore_to_utf8($o->title), ENT_QUOTES),
-					'excerpt' 	=> htmlspecialchars($this->_restore_to_utf8($o->excerpt), ENT_QUOTES),
+					'title' 	=> hsc($this->_restore_to_utf8($o->title)),
+					'excerpt' 	=> hsc($this->_restore_to_utf8($o->excerpt)),
 					'tburl' 	=> $this->getTrackBackUrl($tb_id)
 				);
 				
@@ -831,14 +831,14 @@ class NP_TrackBack extends NucleusPlugin {
 			$p->free();
 			if( $p->isError ){
 				$errorMessage = mb_convert_encoding($p->message, _CHARSET, 'UTF-8');
-				return 'An error occurred: ' . htmlspecialchars($errorMessage, ENT_QUOTES);
+				return 'An error occurred: ' . hsc($errorMessage);
 			}
 		} else {
 			if ( strpos($DATA[1],'<error>0</error>') === false ){
 				preg_match("/<message>(.*?)<\/message>/",$DATA[1],$error_message);
 				if( $error_message[1] ){
 					$errorMessage = mb_convert_encoding($error_message[1], _CHARSET);
-					return 'An error occurred: '.htmlspecialchars($errorMessage, ENT_QUOTES);
+					return 'An error occurred: '.hsc($errorMessage);
 				} else {
 					return 'An error occurred: fatal error.';
 				}
@@ -1099,7 +1099,7 @@ class NP_TrackBack extends NucleusPlugin {
 			if (_CHARSET != 'UTF-8')
 				$errorMessage = mb_convert_encoding($errorMessage, 'UTF-8');
 			echo "<error>1</error>\n";
-			echo "<message>".htmlspecialchars($errorMessage, ENT_QUOTES)."</message>\n";
+			echo "<message>".hsc($errorMessage)."</message>\n";
 		} else {
 			echo "<error>0</error>\n";
 		}
@@ -1125,7 +1125,7 @@ class NP_TrackBack extends NucleusPlugin {
 		$url = $CONF['SiteURL'];
 		
 		if ($o = sql_fetch_object($res)) {
-			$url = htmlspecialchars($o->url, ENT_QUOTES);
+			$url = hsc($o->url);
 		}
 		
 		$url = stripslashes($url);
@@ -2062,10 +2062,10 @@ class NP_TrackBack extends NucleusPlugin {
 			$delUrl = $manager->addTicketToUrl(vsprintf('%s?action=plugin&name=TrackBack&type=deletelc&tb_id=%s&from_id=%s'),$_);
 			$data = array(
 				'url' => createItemLink($o->from_id),
-				'blogname' => htmlspecialchars(getBlogNameFromID($o->iblog)),
+				'blogname' => hsc(getBlogNameFromID($o->iblog)),
 				'timestamp' => strftime('%Y-%m-%d',strtotime($o->itime)),
-				'title' => htmlspecialchars($o->ititle),
-				'excerpt' => htmlspecialchars(shorten(strip_tags($o->ibody),200,'...')),
+				'title' => hsc($o->ititle),
+				'excerpt' => hsc(shorten(strip_tags($o->ibody),200,'...')),
 				'delete' => $canDelete?'<a href="'. hsc($delUrl) .'">[delete]</a>':'',
 				'tburl' => $this->getTrackBackUrl($tb_id),
 				'commentcount'=> quickQuery('SELECT COUNT(*) as result FROM '.sql_table('comment').' WHERE citem=' . intval($o->from_id))
